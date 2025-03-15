@@ -24,7 +24,6 @@ class Player:
         self.level += 1
         print(f"Oooooohh Yeah!, {self.name} just reached level {self.level}.")
 
-
     def show_inventory(self):
         if self.inventory:
             print(f"\n{self.name}'s Inventory:")
@@ -37,23 +36,67 @@ class Player:
         print(f"you picked up: {item}")
     def to_dict(self):
         return {"name": self.name, "inventory": self.inventory}
+
 class Planet:
     def __init__(self, name, difficulty):
         self.name = name
         self.difficulty = difficulty
         self.treasures = ["Plasma Shield", "Laser Sword", "Alien Blaster"]
+    
     def describe_planet(self):
         print(f"{self.name} is a mysterious planet with a difficulty of {self.difficulty}.")
+    
     def explore(self, player):
         print(f"You have arrived on {self.name} (With a difficulty of: {self.difficulty})")
         self.describe_planet()
         chance_of_success = random.random()
+        
         if chance_of_success > self.difficulty * 0.2:
             print("You have now concorded the PLANET!")
             found_item = random.choice(self.treasures)
             player.add_to_inventory(found_item)
+            if random.random() > 0.7:
+                self.encounter_monster(player)
         else:
-            print("....This planet has to many extra turestials that you cannot defeat")
+            print("....This planet has to many extraturestials that you cannot defeat")
+            player.take_damage(20)
+    def encounter_monster(self, player):
+        print("A Alien monster has appeared!")
+        monster = random.choice(self.monsters)
+        print(f"You are face to face with a {monster}!")
+        action = input("Do you want to fight or run? (fight/run): ").lower()
+        if action == "fight":
+            self.fight_monster(player, monster)
+        elif action == "run":
+            self.run_from_monster(player)
+        else:
+            print("Invalid action, The monster is eating you!")
+            player.take_damage(20)
+    def fight_monster(self, player, monster):
+        monster_health = random.randint(30, 50)
+        print(f"{monster} has {monster_health} health!")
+        while monster_health > 0 and player.health > 0:
+            action = input("choose an action: (Attack/Run): ").lower()
+            if action == "attack":
+                damage = random.randint(10,20)
+                monster_health -= damage
+                print(f"You attacked {monster} for {damage} damage! It has {monster_health} health left!")
+
+                if monster_health > 0:
+                    monster_attack = random.randint(5, 15)
+                    player.take_damage(monster_attack)
+                    print(f"{monster} attacks you for {monster_attack} damage!")
+            elif action == "run":
+                print("Come back when you are ready for battle!")
+                break
+            else:
+                print("Invalid action. Monster attacks!")
+                player.take_damage(10)
+        if player.health == 0:
+            print("You have been conqured by the monster...")
+        elif monster_health <= 0:
+            print(f"You have defeated the {monster}")
+            
     #maybe a def about the planet decription
 class Galaxy:
     def __init__(self):
