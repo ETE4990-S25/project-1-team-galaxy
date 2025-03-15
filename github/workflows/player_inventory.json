@@ -1,0 +1,20 @@
+{
+    "items": [
+        {
+            "name": "Basic Laser Gun",
+            "type": "Weapon",
+            "damage": 15
+        },
+        {
+            "name": "Standard Armor",
+            "type": "Armor",
+            "defense": 10
+        },
+        {
+            "name": "Health Potion",
+            "type": "Consumable",
+            "heal_amount": 20,
+            "quantity": 2
+        }
+    ]
+}
