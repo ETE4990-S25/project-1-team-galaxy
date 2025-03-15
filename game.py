@@ -96,7 +96,14 @@ class Planet:
             print("You have been conqured by the monster...")
         elif monster_health <= 0:
             print(f"You have defeated the {monster}")
-            
+    def run_from_monster(self, player):
+        chance_to_escape = random.random()
+        if chance_to_escape > 0.5:
+            print(f"You successfully escaped from the monster by a hair!")
+        else:
+            print("You couldn't escape in time! you are now the monsters food...")
+            player.take_damage(20) 
+       
     #maybe a def about the planet decription
 class Galaxy:
     def __init__(self):
