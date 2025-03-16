@@ -2,10 +2,11 @@ import random
 import json
 
 class Player:
-    def __init__(self, name, inventory = None, health=100, level=1):
+    def __init__(self, name, inventory = None, health=100, level=1, credits=100):
         self.name = name
         self.health = health
         self.level = level
+        self.credits = credits
         self.inventory = inventory if inventory else []
 
     def take_damage(self, amount):
@@ -35,7 +36,13 @@ class Player:
         self.inventory.append(item)
         print(f"you picked up: {item}")
     def to_dict(self):
-        return {"name": self.name, "inventory": self.inventory}
+        return {
+            "name": self.name, 
+            "inventory": self.inventory,
+            "health": self.health,
+            "level": self.level,
+            "credits": self.credits
+        }
 
 class Planet:
     def __init__(self, name, difficulty):
@@ -74,9 +81,13 @@ class Planet:
             player.take_damage(20)
     def fight_monster(self, player, monster):
         monster_health = random.randint(30, 50)
+        monster_reward = random.randint(20, 100)
+
         print(f"{monster} has {monster_health} health!")
+
         while monster_health > 0 and player.health > 0:
             action = input("choose an action: (Attack/Run): ").lower()
+            
             if action == "attack":
                 damage = random.randint(10,20)
                 monster_health -= damage
@@ -88,14 +99,18 @@ class Planet:
                     print(f"{monster} attacks you for {monster_attack} damage!")
             elif action == "run":
                 print("Come back when you are ready for battle!")
-                break
+                return
+            
             else:
                 print("Invalid action. Monster attacks!")
                 player.take_damage(10)
+
         if player.health == 0:
             print("You have been conqured by the monster...")
         elif monster_health <= 0:
-            print(f"You have defeated the {monster}")
+            print(f"You have defeated the {monster} and earned {monster_reward} credits!")
+            player.credits += monster_reward
+   
     def run_from_monster(self, player):
         chance_to_escape = random.random()
         if chance_to_escape > 0.5:
@@ -150,15 +165,22 @@ class SpaceShop:
 def save_character(player):
     try: 
         with open("player_save.json", "w") as file:
-            json.sump(player.to_dict(), file)
+            json.dump(player.to_dict(), file)
         print("\nGame save Successful")
     except Exception as e:
         print(f"\nError saving game: {e}")
+
 def load_game():
     try:
         with open("player_save.json", "r") as file:
             data = json.load(file)
-            player = Player(name=data["name"], inventory=data.get("inventory", []))
+            player = Player(
+                name=data["name"], 
+                inventory=data.get("inventory", []),
+                health=data.get("health", 100),
+                level=data.get("level", 1),
+                credits=data.get("credits", 100)
+            )
         print("\nGame loaded sucussefully.")
         return player
     except FileNotFoundError:
@@ -183,19 +205,26 @@ def save_inventory(inventory):
         json.dump(inventory, file)
     print("Inventory saved.")
 
-def play_game(player, galaxy):
+def play_game(player, galaxy, shop):
     while True:
+        print("\n=== Player Status ===")
+        print(f"Name: {player.name}")
+        print(f"Health: {player.health}")
+        print(f"level: {player.level}")
+        print(f"Credits: {player.credits}")
         print("\n--- Game Menu ---")
         print("1. Show Inventory")
         print("2. Explore Galaxy")
-        print("3.Save Game")
+        print("3. Save Game")
         print("4. Save Inventory")
         print("5. Exit to Main Menu")
+        print("6. Visit Space Shop")
+
         choice = input("Choose an option: ")
         if choice =="1":
             player.show_inventory()
         elif choice == "2":
-            galaxy.show_plantes()
+            galaxy.show_planets()
             try:
                 planet_choice = int(input("Select a planet to explore:  "))
                 if 1 <= planet_choice <= len(galaxy.planets):
@@ -211,33 +240,49 @@ def play_game(player, galaxy):
         elif choice == "5":
             print("\nReturning to the main menu..")
             break
+        elif choice == "6": 
+            shop.buy_item(player)
         else:
             print("\nInvalid option. Try again.")
             
 def main():
     print("Welcome to galaxy explore!")
+    
     while True:
         print("\n--- Main Menu ---")
         print("1. New Game")
         print("2. Load Game")
         print("3. Exit")
         choice = input("Choose an option: ")
+       
         if choice == "1":
             player_name = input("\nEnter your name, explorer: ")
             player = Player(player_name)
             galaxy = Galaxy()
-            play_game(player, galaxy)
+            shop = SpaceShop()
+            
+            print("\n=== Player Created! ===")
+            print(f"Name: {player.name}")
+            print(f"Health: {player.health}")
+            print(f"Level: {player.level}")
+            print(f"Credits: {player.credits}")
+           
+            play_game(player, galaxy, shop)
+
         elif choice == "2":
             player = load_game()
             if player:
                 galaxy = Galaxy()
-                play_game(player, galaxy)
+                shop = SpaceShop()
+                play_game(player, galaxy, shop)
+       
         elif choice == "3":
             print("\nSee you next time explorer! Safe travels!...watch for the space poop....")
+       
         else:
             print("\nInvalid option. Select again.")
 
 if __name__ == "__main__":
     main()
 
-                        
+    
