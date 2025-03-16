@@ -118,6 +118,35 @@ class Galaxy:
             print(f"{i}. {planet.name} (Difficulty: {planet.difficulty})")
 #need save and load functions
 #use player_inventory.json for save and load
+
+class SpaceShop:
+    def __init__(self):
+        self.items = {
+            "Health Potion": 50,
+            "Laser Sword": 150,
+            "Shield Generator": 100,
+            "Energy Pack":75
+        }
+    def display_shop(self):
+        print("\n --- Welcome to the Space Shop ---" )
+        for item, price in self.items.items():
+            print(f"{item}: {price} credits")
+
+    def buy_item(self, player):
+        self.display_shop()
+        choice = input("Enter the item name you want to buy (or 'exit' to leave): ").title()
+        if choice in self.items:
+            if player.credits >= self.items[choice]:
+                player.credits -= self.items[choice]
+                player.add_to_inventory(choice)
+                print(f"You purchased {choice} for {self.items[choice]} credit.")
+            else: 
+                print("You don't have enough credits")
+        elif choice.lower() == "exit":
+            print("Leaving the shop...")
+        else:
+            print("Invalid selection...")
+
 def load_inventory():
     try:
         with open('player_inventory.json', 'r') as file:
@@ -134,7 +163,7 @@ def save_inventory(inventory):
     print("Inventory saved.")
 
 def play_game(player, galaxy):
-    while true:
+    while True:
         print("\n--- Game Menu ---")
         print("1. Show Inventory")
         print("2. Explore Galaxy")
@@ -166,7 +195,7 @@ def play_game(player, galaxy):
             
 def main():
     print("Welcome to galaxy explore!")
-    while true:
+    while True:
         print("\n--- Main Menu ---")
         print("1. New Game")
         print("2. Load Game")
