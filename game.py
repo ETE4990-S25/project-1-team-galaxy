@@ -154,7 +154,20 @@ def save_character(player):
         print("\nGame save Successful")
     except Exception as e:
         print(f"\nError saving game: {e}")
-
+def load_game():
+    try:
+        with open("player_save.json", "r") as file:
+            data = json.load(file)
+            player = Player(name=data["name"], inventory=data.get("inventory", []))
+        print("\nGame loaded sucussefully.")
+        return player
+    except FileNotFoundError:
+        print("\nNo saved game found. Starting a new game.")
+        return None
+    except Exception as e:
+        print(f"\nError loading game: {e}")
+        return None
+        
 def load_inventory():
     try:
         with open('player_inventory.json', 'r') as file:
