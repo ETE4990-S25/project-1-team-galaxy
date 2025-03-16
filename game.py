@@ -147,6 +147,14 @@ class SpaceShop:
         else:
             print("Invalid selection...")
 
+def save_character(player):
+    try: 
+        with open("player_save.json", "w") as file:
+            json.sump(player.to_dict(), file)
+        print("\nGame save Successful")
+    except Exception as e:
+        print(f"\nError saving game: {e}")
+
 def load_inventory():
     try:
         with open('player_inventory.json', 'r') as file:
@@ -174,11 +182,11 @@ def play_game(player, galaxy):
         if choice =="1":
             player.show_inventory()
         elif choice == "2":
-            galaxy. show_plantes()
+            galaxy.show_plantes()
             try:
-                planet_choice = int(input("Select a plant to explore:  "))
+                planet_choice = int(input("Select a planet to explore:  "))
                 if 1 <= planet_choice <= len(galaxy.planets):
-                    galaxy.planets[planet_choice = 1].explore(player)
+                    galaxy.planets[planet_choice - 1].explore(player)
                 else:
                         print("\nInvalid planet selection.")
             except ValueError:
