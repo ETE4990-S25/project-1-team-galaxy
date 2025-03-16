@@ -57,7 +57,7 @@ class Planet:
     def explore(self, player):
         print(f"You have arrived on {self.name} (With a difficulty of: {self.difficulty})")
         if random.random() < 0.5:
-            monster = random.choice(["Alien Beast", "Space Serpent", "Galactic Raider"])
+            monster = random.choice(self.monsters)
             print(f"A {monster} appears!")
 
             action = input("Do you want to fight (yes/no)? ").strip().lower()
@@ -65,6 +65,13 @@ class Planet:
                 self.fight_monster(player, monster)
             else: 
                 print("You avoided the fight and continued exploring.")
+        else:
+            print("You explore peacefully without encountering danger.")
+            if random.random() < 0.5:
+                found_item = random.choice(self.treasures)
+                player.add_to_inventory(found_item)
+                print(f"You found a hidden treasure: {found_item}.")
+                
         #self.describe_planet()
         #chance_of_success = random.random()
         
