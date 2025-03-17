@@ -1,7 +1,7 @@
 import random
 import json
 import os
-
+#creating your player
 class Player:
     def __init__(self, name, inventory = None, health=100, level=1, credits=100):
         self.name = name
@@ -36,6 +36,7 @@ class Player:
     def add_to_inventory(self, item):
         self.inventory.append(item)
         print(f"you picked up: {item}")
+   #saving player profile to dictionary
     def to_dict(self):
         return {
             "name": self.name, 
@@ -54,7 +55,7 @@ class Planet:
     
     def describe_planet(self):
         print(f"{self.name} is a mysterious planet with a difficulty of {self.difficulty}.")
-    
+    #option to choose fight or not
     def explore(self, player):
         print(f"You have arrived on {self.name} (With a difficulty of: {self.difficulty})")
         if random.random() < 0.5:
@@ -98,7 +99,7 @@ class Planet:
         else:
             print("Invalid action, The monster is eating you!")
             player.take_damage(20)
-    
+    #this is where player gets to fight monster while showing monster and player health and attack points
     def fight_monster(self, player, monster):
         monster_health = random.randint(30, 50)
         monster_reward = random.randint(20, 100)
@@ -177,7 +178,7 @@ class Galaxy:
             print(f"{i}. {planet.name} (Difficulty: {planet.difficulty})")
 #need save and load functions
 #use player_inventory.json for save and load
-
+#a shope where you can buy upgrades and enhance inventory
 class SpaceShop:
     def __init__(self):
         self.items = {
@@ -214,7 +215,7 @@ def save_character(player):
         print("\nGame save Successful")
     except Exception as e:
         print(f"\nError saving game: {e}")
-
+#load in previously saved game from created json file
 def load_game():
     save_files = [f for f in os.listdir() if f.startswith("player_") and f.endswith(".json")]
     if not save_files:
@@ -248,7 +249,7 @@ def load_game():
     except Exception as e:
         print(f"\nError loading game: {e}")
         return None
-        
+#to load in previously saved inventory        
 def load_inventory():
     try:
         with open('player_inventory.json', 'r') as file:
@@ -264,6 +265,7 @@ def save_inventory(inventory):
         json.dump(inventory, file)
     print("Inventory saved.")
 
+#this where it shows player status and game menu options
 def play_game(player, galaxy, shop):
     while True:
         print("\n=== Player Status ===")
@@ -303,7 +305,7 @@ def play_game(player, galaxy, shop):
             shop.buy_item(player)
         else:
             print("\nInvalid option. Try again.")
-            
+ #main game with menu options           
 def main():
     print("Welcome to galaxy explore!")
     
