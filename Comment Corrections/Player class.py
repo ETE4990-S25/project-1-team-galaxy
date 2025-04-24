@@ -7,15 +7,11 @@ class Player:
         self.inventory = inventory if inventory else []
 
     def take_damage(self, amount):
-        self.health -= amount
-        if self.health < 0:
-            self.health = 0
+        self.health = max(self.health - amount, 0)
         print(f"Wow watch out... you just took {amount} damage! Your health us now {self.health}.")
     
     def heal(self, amount):
-        self.health += amount
-        if self.health > 100:
-            self.health = 100
+        self.health = min(self.health + amount, 100)
         print(f"Nice! You healed {amount}! Your health is now {self.health}.")
 
     def level_up(self):
@@ -30,8 +26,11 @@ class Player:
         else:
             print("No Inventory")
     def add_to_inventory(self, item):
-        self.inventory.append(item)
-        print(f"you picked up: {item}")
+        if isinstance(item, str) and item.strip():
+            self.inventory.append(item)
+            print(f"you picked up: {item}")
+        else: 
+            print("Invalid item! Nothing was added to inventory.")
    #saving player profile to dictionary
     def to_dict(self):
         return {

@@ -30,8 +30,11 @@ class Player:
         else:
             print("No Inventory")
     def add_to_inventory(self, item):
-        self.inventory.append(item)
-        print(f"you picked up: {item}")
+        if isinstance(item, str) and item.strip():
+            self.inventory.append(item)
+            print(f"you picked up: {item}")
+        else: 
+            print("Invalid item! Nothing was added to inventory.")
    #saving player profile to dictionary
     def to_dict(self):
         return {
