@@ -26,15 +26,29 @@ class Player:
         if self.inventory:
             print(f"\n{self.name}'s Inventory:")
             for i, item in enumerate(self.inventory, 1):
-                print(f"{i}. {item}")
+                if isinstance(item, dict):
+                    name = item.get("name", "Unkown")
+                    item_type = item.get("type", "Unknown")
+                    rarity = item.get("rarity", "common")
+                    print(f"{i}. {name} (Type: {item_type}, Rarity: {rarity})")
+                else:
+                    print(f"{i}. {item}")
         else:
             print("No Inventory")
+
     def add_to_inventory(self, item):
-        if isinstance(item, str) and item.strip():
+        if isinstance(item, dict):
             self.inventory.append(item)
-            print(f"you picked up: {item}")
+            name = item.get("name", "Unkown Item")
+            rarity = item.get("rarity", "Common")
+            item_type = item.get("type", "Misc")
+            print(f"you picked up: {name} (Type: {item_type}, Rarity: {rarity})")
+        elif isinstance(item, str) and item.strip():
+            self.inventory.append(item)
+            print(f"You picked up: {item}")
         else: 
             print("Invalid item! Nothing was added to inventory.")
+  
    #saving player profile to dictionary
     def to_dict(self):
         return {
@@ -49,7 +63,11 @@ class Planet:
     def __init__(self, name, difficulty):
         self.name = name
         self.difficulty = difficulty
-        self.treasures = ["Plasma Shield", "Laser Sword", "Alien Blaster"]
+        self.treasures = [
+            {"name":"Plasma Shield", "type": "Armor", "rarity": "common", "defense": 15}, 
+            {"name": "Laser Sword", "type": "Weapon", "rarity": "Rare", "power": 25},
+            {"name": "Alien Blaster", "type": "weapon", "rarity": "Epic", "power": 40}
+        ]
         self.monsters = ["Alien Beast", "Space Serpent", "Galactic Raider"]
     
     def describe_planet(self):
