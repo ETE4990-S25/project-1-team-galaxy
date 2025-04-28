@@ -1,0 +1,12 @@
+{
+    "name": "Player1",
+    "character_type": "Pilot",
+    "level": 1,
+    "health": 100,
+    "max_health": 100,
+    "xp": 0,
+    "attack_power": 10,
+    "defense": 5,
+    "credits": 100,
+    "current_planet": "Earth"
+}
